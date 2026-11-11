@@ -1,0 +1,169 @@
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@xterm/xterm/css/xterm.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =====================================================================================
+   Design tokens. Glass is the default; data-style="solid" swaps to opaque panels.
+   Green (#37B6A6) is identical in both and is used only for actions and the mascot.
+   ===================================================================================== */
+:root {
+  --c-bg: #060a0c;
+  --c-surface: rgba(205, 255, 247, 0.045);
+  --c-raised: rgba(205, 255, 247, 0.075);
+  --c-field: rgba(0, 0, 0, 0.26);
+  --c-line: rgba(205, 255, 247, 0.10);
+  --c-line2: rgba(205, 255, 247, 0.20);
+  --c-ink: #e7edf0;
+  --c-mute: #a2aeb5;
+  --c-faint: #7d8b93;
+  --glass-blur: blur(22px) saturate(150%);
+  --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 18px 40px -26px rgba(0, 0, 0, 0.8);
+  --side-bg: rgba(7, 13, 15, 0.62);
+  --hover: rgba(205, 255, 247, 0.055);
+}
+html[data-style='solid'] {
+  --c-bg: #0c0f14;
+  --c-surface: #141922;
+  --c-raised: #1b212c;
+  --c-field: #1b212c;
+  --c-line: #273040;
+  --c-line2: #323d4f;
+  --c-ink: #d4dae3;
+  --c-mute: #8b95a5;
+  --c-faint: #6b7686;
+  --glass-blur: none;
+  --glass-shadow: none;
+  --side-bg: #0f131a;
+  --hover: rgba(255, 255, 255, 0.04);
+}
+
+@layer base {
+  html { color-scheme: dark; }
+  body { background: var(--c-bg); color: var(--c-ink); @apply font-sans antialiased; font-feature-settings: 'tnum' 1; }
+  /* soft green light behind the glass; fixed, so panels blur it as you scroll */
+  html:not([data-style='solid']) body {
+    background:
+      radial-gradient(62rem 40rem at 6% -10%, rgba(55, 182, 166, 0.21), transparent 62%),
+      radial-gradient(46rem 34rem at 100% 2%, rgba(42, 138, 126, 0.15), transparent 58%),
+      radial-gradient(54rem 34rem at 58% 114%, rgba(55, 182, 166, 0.11), transparent 62%),
+      var(--c-bg);
+    background-attachment: fixed;
+  }
+  ::selection { background: rgba(55, 182, 166, 0.3); }
+  :focus-visible { outline: 2px solid #37b6a6; outline-offset: 2px; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--c-line2); border-radius: 6px; border: 2px solid transparent; background-clip: content-box; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(205, 255, 247, 0.32); background-clip: content-box; }
+}
+
+@layer components {
+  .card {
+    border: 1px solid var(--c-line); background: var(--c-surface); border-radius: 1rem;
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); box-shadow: var(--glass-shadow);
+  }
+  .btn, .btn-primary, .btn-ghost, .btn-sub, .btn-danger, .btn-danger-solid {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; border-radius: 0.75rem;
+    padding: 0.5rem 0.95rem; font-size: 0.875rem; font-weight: 500; line-height: 1.25rem; user-select: none;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+  }
+  .btn:active:not(:disabled), .btn-primary:active:not(:disabled), .btn-ghost:active:not(:disabled), .btn-sub:active:not(:disabled), .btn-danger:active:not(:disabled), .btn-danger-solid:active:not(:disabled) { transform: translateY(0.5px); }
+  .btn:disabled, .btn-primary:disabled, .btn-ghost:disabled, .btn-sub:disabled, .btn-danger:disabled, .btn-danger-solid:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-primary { background: #37b6a6; color: #06201c; }
+  .btn-primary:hover:not(:disabled) { background: #2a8a7e; color: #fff; }
+  .btn-ghost { border: 1px solid var(--c-line2); color: var(--c-ink); background: rgba(255, 255, 255, 0.03); }
+  .btn-ghost:hover:not(:disabled) { background: var(--c-raised); }
+  .btn-sub { border: 1px solid var(--c-line); background: var(--c-raised); color: var(--c-mute); font-size: 0.75rem; padding: 0.35rem 0.7rem; border-radius: 0.65rem; }
+  .btn-sub:hover:not(:disabled) { color: var(--c-ink); border-color: var(--c-line2); }
+  .btn-danger { border: 1px solid rgba(229, 72, 77, 0.45); color: #f0777b; background: transparent; }
+  .btn-danger:hover:not(:disabled) { background: rgba(229, 72, 77, 0.12); }
+  .btn-danger-solid { background: #e5484d; color: #fff; }
+  .btn-danger-solid:hover:not(:disabled) { background: #c73a3f; }
+  .input {
+    width: 100%; border-radius: 0.75rem; border: 1px solid var(--c-line); background: var(--c-field); padding: 0.55rem 0.8rem;
+    font-size: 0.875rem; color: var(--c-ink); transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .input::placeholder { color: var(--c-faint); }
+  .input:focus { outline: none; border-color: #37b6a6; box-shadow: 0 0 0 3px rgba(55, 182, 166, 0.22); }
+  .input:disabled { opacity: 0.6; }
+  .label { display: block; margin-bottom: 0.4rem; font-size: 0.75rem; font-weight: 500; color: var(--c-mute); }
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.375rem; border-radius: 9999px; border: 1px solid var(--c-line);
+    background: var(--c-raised); padding: 0.1rem 0.65rem; font-size: 0.75rem; color: var(--c-mute);
+  }
+
+  /* segmented control (tabs) */
+  .seg { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 0.85rem; border: 1px solid var(--c-line); background: var(--c-field); }
+  .seg-btn { display: inline-flex; align-items: center; gap: 0.4rem; border-radius: 0.65rem; padding: 0.38rem 0.85rem; font-size: 0.85rem; color: var(--c-mute); transition: background-color 0.15s, color 0.15s; }
+  .seg-btn:hover { color: var(--c-ink); }
+  .seg-on { background: rgba(205, 255, 247, 0.13); color: var(--c-ink); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.3); }
+  .seg-count { font-size: 0.72rem; color: var(--c-faint); }
+
+  /* sidebar */
+  .sidebar { background: var(--side-bg); -webkit-backdrop-filter: blur(28px) saturate(160%); backdrop-filter: blur(28px) saturate(160%); border-right: 1px solid var(--c-line); }
+  html[data-style='solid'] .sidebar { -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .nav-item {
+    position: relative; display: flex; align-items: center; gap: 0.7rem; border-radius: 0.8rem; padding: 0.5rem 0.7rem;
+    font-size: 0.9rem; color: var(--c-mute); transition: background-color 0.15s, color 0.15s;
+  }
+  .nav-item:hover { background: var(--hover); color: var(--c-ink); }
+  .nav-item[data-active='true'] {
+    color: var(--c-ink); background: linear-gradient(90deg, rgba(55, 182, 166, 0.2), rgba(55, 182, 166, 0.06));
+    box-shadow: inset 0 0 0 1px rgba(55, 182, 166, 0.26);
+  }
+  .nav-item[data-active='true'] svg { color: #37b6a6; }
+
+  /* rows inside grouped lists */
+  .list-row { transition: background-color 0.15s; }
+  a.list-row:hover, .list-row.hoverable:hover { background: var(--hover); }
+  .task-icon { display: grid; place-items: center; flex: none; width: 2.35rem; height: 2.35rem; border-radius: 0.8rem; color: #37b6a6; background: rgba(55, 182, 166, 0.13); box-shadow: inset 0 0 0 1px rgba(55, 182, 166, 0.2); }
+
+  /* dialog */
+  .modal-backdrop { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 1.25rem; background: rgba(2, 6, 8, 0.58); -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px); }
+  .modal { width: 100%; max-width: 30rem; max-height: 92vh; overflow: auto; background: rgba(14, 22, 25, 0.82); box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+  html[data-style='solid'] .modal { background: #141922; }
+
+  /* iOS-style switch */
+  .switch { position: relative; flex: none; width: 2.6rem; height: 1.5rem; border-radius: 9999px; background: rgba(205, 255, 247, 0.16); transition: background-color 0.2s; }
+  .switch[aria-checked='true'] { background: #37b6a6; }
+  .switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: calc(1.5rem - 4px); height: calc(1.5rem - 4px); border-radius: 9999px; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); transition: transform 0.2s; }
+  .switch[aria-checked='true']::after { transform: translateX(1.1rem); }
+}
+
+.dot { width: 7px; height: 7px; border-radius: 9999px; display: inline-block; flex: none; }
+@keyframes pulse-dot { 0%, 100% { opacity: 1 } 50% { opacity: 0.35 } }
+.pulse { animation: pulse-dot 1.4s ease-in-out infinite; }
+@keyframes slide { 0% { transform: translateX(-100%) } 100% { transform: translateX(300%) } }
+.indeterminate { animation: slide 1.6s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .pulse, .indeterminate { animation: none; } }
+
+/* ---- Terminal: Windows Terminal "Campbell" look, as in a real Kali WSL window (not themed) ---- */
+.kali-frame { background: #0c0c0c; border: 1px solid #000; border-radius: 8px; overflow-x: auto; padding: 10px 8px 6px 12px; box-shadow: 0 18px 40px -26px rgba(0, 0, 0, 0.8); }
+.kali-frame .xterm { padding: 0; }
+.kali-frame .xterm-viewport { background-color: #0c0c0c !important; }
+
+/* ---- Report tables: same look as the reference tables (white, bold header, pale-blue bands) ---- */
+.report-wrap { overflow-x: auto; border-radius: 0.75rem; border: 1px solid var(--c-line2); background: #fff; }
+.report { border-collapse: collapse; width: 100%; background: #fff; color: #000; font-family: Calibri, Carlito, 'Segoe UI', Arial, sans-serif; font-size: 14.5px; }
+.report th { text-align: left; font-weight: 700; padding: 9px 12px; border: 1px solid #7f7f7f; background: #fff; }
+.report td { padding: 5px 12px; border: 1px solid #7f7f7f; vertical-align: middle; }
+.report td.c, .report th.c { text-align: center; }
+.report .band { background: #dae3f3; }
+.report .yes { color: #ff0000; font-weight: 700; }
+
+/* ---- Text size: "large" is about +1.5 pt (16px -> 18px root). Terminal and report tables use px and are unaffected. ---- */
+html[data-size='large'] { font-size: 18px; }
+
+/* ---- Mascot motion: slow, lazy, and off for people who prefer reduced motion ---- */
+.sloth-sway { transform-box: view-box; transform-origin: 60px 14px; animation: sloth-sway 5.5s ease-in-out infinite; }
+.sloth-eyes { transform-box: fill-box; transform-origin: center; animation: sloth-blink 6.5s ease-in-out infinite; }
+@keyframes sloth-sway { 0%, 100% { transform: rotate(-2.2deg) } 50% { transform: rotate(2.2deg) } }
+@keyframes sloth-blink { 0%, 93%, 100% { transform: scaleY(1) } 96% { transform: scaleY(0.08) } }
+@media (prefers-reduced-motion: reduce) { .sloth-sway, .sloth-eyes { animation: none; } }

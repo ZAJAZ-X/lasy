@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Frontend: dependencies are not committed. The built interface (frontend/dist) IS committed, so nobody needs Node to run lasy
+node_modules/
+.vite/
+
+# lasy runtime data. It normally lives outside this folder (~/.local/share/lasy), ignored in case it is copied in
+*.db
+*.db-wal
+*.db-shm
+*.log
+term/
+work/
+
+# Scan output and anything that can hold client data
+results/
+exports/
+*.xlsx
+*.gnmap
+*.nmap
+*.jsonl
+knockpy_subdomains.txt
+subdomains_*.txt
+subdomains_*.csv
+
+# Secrets and local configuration
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+id_rsa*
+
+# Packaging, editors, OS
+*.zip
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
