@@ -30,7 +30,7 @@
 Keep the folder in your Linux home (`~/lasy`), not under `/mnt/c`.
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/lasy.git ~/lasy
+git clone https://github.com/ZAJAZ-x/lasy.git ~/lasy
 cd ~/lasy
 bash scripts/install.sh
 ```
